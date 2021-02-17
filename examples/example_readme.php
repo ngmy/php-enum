@@ -1,11 +1,9 @@
-# PHP Enum
-PHP Enum is the enumeration type for PHP.
+<?php
 
-- Implemented as a trait. This allows you to keep only one free slot for inheritance
-- Interface like the enum type of Java
-- Also provides the enum array like the enum set of Java
+declare(strict_types=1);
 
-```php
+require_once __DIR__ . '/../vendor/autoload.php';
+
 /**
  * @method static static FOO()
  * @method static static BAR()
@@ -73,21 +71,3 @@ class Enum2
 echo Enum2::valueOf('FOO')->getValue() . PHP_EOL; // 1
 echo Enum2::valueOf('BAR')->getValue() . PHP_EOL; // 2
 echo Enum2::valueOf('BAZ')->getValue() . PHP_EOL; // 3
-```
-
-## Requirements
-PHP Enum has the following requirements:
-
-* PHP >= 7.3
-
-## Installation
-Execute the Composer `require` command:
-```console
-composer require ngmy/enum
-```
-
-## Documentation
-Please see the [API documentation](https://ngmy.github.io/php-enum/api/).
-
-## License
-PHP Enum is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

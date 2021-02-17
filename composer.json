@@ -1,0 +1,56 @@
+{
+    "name": "ngmy/enum",
+    "type": "library",
+    "description": "The enumeration type for PHP",
+    "keywords": [
+        "enum",
+        "enumeration",
+        "type",
+        "trait",
+        "array"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yuta Nagamiya",
+            "email": "y.nagamiya@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "ngmy/typed-array": "^0.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ngmy\\Enum\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ngmy\\Enum\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": [
+            "@php tools/phpunit --colors=always"
+        ],
+        "lint": [
+            "@php tools/phpcs"
+        ],
+        "findbugs": [
+            "@php tools/phpstan analyse --ansi"
+        ],
+        "fmt": [
+            "@php tools/phpcbf | exit 0",
+            "@php tools/php-cs-fixer fix --ansi"
+        ],
+        "docs": [
+            "@php tools/phpDocumentor --force"
+        ]
+    }
+}
