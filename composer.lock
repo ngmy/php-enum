@@ -1,0 +1,79 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "af9cef827af01482586285ea9e5edb1f",
+    "packages": [
+        {
+            "name": "ngmy/typed-array",
+            "version": "0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ngmy/php-typed-array.git",
+                "reference": "2eb114d4d5483893b3fd4db92a059deef4eef767"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ngmy/php-typed-array/zipball/2eb114d4d5483893b3fd4db92a059deef4eef767",
+                "reference": "2eb114d4d5483893b3fd4db92a059deef4eef767",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ngmy\\TypedArray\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yuta Nagamiya",
+                    "email": "y.nagamiya@gmail.com"
+                }
+            ],
+            "description": "The typed array for PHP",
+            "keywords": [
+                "Typed Array",
+                "array",
+                "type"
+            ],
+            "support": {
+                "issues": "https://github.com/ngmy/php-typed-array/issues",
+                "source": "https://github.com/ngmy/php-typed-array/tree/0.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://flattr.com/@ngmy",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/ngmy",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-02-22T12:46:49+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^7.3|^8.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
+}
