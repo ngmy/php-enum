@@ -1,4 +1,13 @@
 # PHP Enum
+[![Latest Stable Version](https://poser.pugx.org/ngmy/enum/v)](//packagist.org/packages/ngmy/enum)
+[![Total Downloads](https://poser.pugx.org/ngmy/enum/downloads)](//packagist.org/packages/ngmy/enum)
+[![Latest Unstable Version](https://poser.pugx.org/ngmy/enum/v/unstable)](//packagist.org/packages/ngmy/enum)
+[![License](https://poser.pugx.org/ngmy/enum/license)](//packagist.org/packages/ngmy/enum)
+[![composer.lock](https://poser.pugx.org/ngmy/enum/composerlock)](//packagist.org/packages/ngmy/enum)
+[![PHP CI](https://github.com/ngmy/php-typed-array/actions/workflows/php.yml/badge.svg)](https://github.com/ngmy/php-typed-array/actions/workflows/php.yml)
+[![Coverage Status](https://coveralls.io/repos/github/ngmy/php-enum/badge.svg?branch=master)](https://coveralls.io/github/ngmy/php-enum?branch=master)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
+
 PHP Enum is the enumeration type for PHP.
 
 - Implemented as a trait. This allows you to keep only one free slot for inheritance
