@@ -4,26 +4,36 @@ declare(strict_types=1);
 
 namespace Ngmy\Enum\Tests\Data;
 
-use Ngmy\Enum\EnumTrait;
+use Ngmy\Enum\Enum;
 
 /**
  * @method static static FOO()
  * @method static static BAR()
  * @method static static BAZ()
  */
-class Enum3
+class Enum3 extends Enum
 {
-    use EnumTrait;
+    /**
+     * @var null
+     * @enum
+     */
+    private static $FOO;
+    /**
+     * @var null
+     * @enum
+     */
+    private static $BAR;
+    /**
+     * @var null
+     * @enum
+     */
+    private static $BAZ;
 
-    /** @var int */
-    protected static $FOO = 1;
-    /** @var int */
-    protected static $BAR = 2;
-    /** @var int */
-    protected static $BAZ = 3;
-
-    public function getValue(): int
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString(): string
     {
-        return static::${$this->name};
+        return \ucwords(\strtolower($this->name()));
     }
 }

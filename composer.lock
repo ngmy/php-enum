@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af9cef827af01482586285ea9e5edb1f",
+    "content-hash": "21a724c3d8579976198bba2227b64234",
     "packages": [
         {
             "name": "ngmy/typed-array",
-            "version": "0.4.0",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ngmy/php-typed-array.git",
-                "reference": "2eb114d4d5483893b3fd4db92a059deef4eef767"
+                "reference": "e0320576cf15fe3b5607f621a97684d9a57369ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ngmy/php-typed-array/zipball/2eb114d4d5483893b3fd4db92a059deef4eef767",
-                "reference": "2eb114d4d5483893b3fd4db92a059deef4eef767",
+                "url": "https://api.github.com/repos/ngmy/php-typed-array/zipball/e0320576cf15fe3b5607f621a97684d9a57369ac",
+                "reference": "e0320576cf15fe3b5607f621a97684d9a57369ac",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ngmy/php-typed-array/issues",
-                "source": "https://github.com/ngmy/php-typed-array/tree/0.4.0"
+                "source": "https://github.com/ngmy/php-typed-array/tree/0.5.0"
             },
             "funding": [
                 {
@@ -62,7 +62,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-22T12:46:49+00:00"
+            "time": "2021-02-26T17:01:12+00:00"
         }
     ],
     "packages-dev": [],

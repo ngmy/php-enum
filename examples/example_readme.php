@@ -9,13 +9,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
  * @method static static BAR()
  * @method static static BAZ()
  */
-class Enum1
+class Enum1 extends Ngmy\Enum\Enum
 {
-    use Ngmy\Enum\EnumTrait;
-
-    protected static $FOO;
-    protected static $BAR;
-    protected static $BAZ;
+    /** @enum */
+    private static $FOO;
+    /** @enum */
+    private static $BAR;
+    /** @enum */
+    private static $BAZ;
 }
 
 // Returns the enum constant of the specified name
@@ -54,17 +55,18 @@ echo var_export($foo->equals($bar), true) . PHP_EOL;                  // false
  * @method static static BAR()
  * @method static static BAZ()
  */
-class Enum2
+class Enum2 extends Ngmy\Enum\Enum
 {
-    use Ngmy\Enum\EnumTrait;
-
-    protected static $FOO = 1;
-    protected static $BAR = 2;
-    protected static $BAZ = 3;
+    /** @enum */
+    private static $FOO = 1;
+    /** @enum */
+    private static $BAR = 2;
+    /** @enum */
+    private static $BAZ = 3;
 
     public function getValue(): int
     {
-        return static::${$this->name};
+        return self::${$this->name()};
     }
 }
 

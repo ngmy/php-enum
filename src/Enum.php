@@ -6,11 +6,14 @@ namespace Ngmy\Enum;
 
 use BadMethodCallException;
 use InvalidArgumentException;
-use Ngmy\TypedArray\TypedArray;
+use LogicException;
 use ReflectionClass;
 
-trait EnumTrait
+abstract class Enum
 {
+    /** @var list<string> */
+    private static $names;
+
     /** @var string */
     private $name;
 
@@ -38,14 +41,13 @@ trait EnumTrait
     /**
      * Returns all constants of this enum type.
      *
-     * @return TypedArray<self>
+     * @return list<self>
      */
-    final public static function values(): TypedArray
+    final public static function values(): array
     {
-        $items = \array_map(function (string $name): self {
+        return \array_map(function (string $name): self {
             return self::valueOf($name);
         }, self::names());
-        return TypedArray::ofClass(static::class, $items);
     }
 
     /**
@@ -56,8 +58,28 @@ trait EnumTrait
      */
     final public static function names(): array
     {
+        self::validateInheritance();
+        if (isset(self::$names)) {
+            return self::$names;
+        }
+        self::$names = [];
         $reflectionClass = new ReflectionClass(\get_called_class());
-        return \array_keys($reflectionClass->getStaticProperties());
+        $staticProperties = $reflectionClass->getStaticProperties();
+        foreach (\array_keys($staticProperties) as $propertyName) {
+            $reflectionProperty = $reflectionClass->getProperty($propertyName);
+            $docComment = $reflectionProperty->getDocComment();
+            if ($docComment === false) {
+                continue;
+            }
+            $lines = \explode(\PHP_EOL, $docComment);
+            foreach ($lines as $line) {
+                if (!\preg_match('/@[^\s]+/', $line, $mathces) || $mathces[0] != '@enum') {
+                    continue;
+                }
+                self::$names[] = $propertyName;
+            }
+        }
+        return self::$names;
     }
 
     /**
@@ -95,9 +117,17 @@ trait EnumTrait
         return $this == $other;
     }
 
-    final public function __wakeup(): void
+    /**
+     * Returns the hash code for this enum constant
+     */
+    final public function hashCode(): int
     {
-        throw new BadMethodCallException('You are not allowed to unserialize.');
+        $result = 17;
+        $nameLength = \strlen($this->name);
+        for ($i = 0; $i < $nameLength; ++$i) {
+            $result = 31 * $result + \ord($this->name[$i]);
+        }
+        return $result;
     }
 
     /**
@@ -108,12 +138,27 @@ trait EnumTrait
         throw new BadMethodCallException('You are not allowed to set data.');
     }
 
+    final public function __wakeup(): void
+    {
+        throw new BadMethodCallException('You are not allowed to unserialize.');
+    }
+
     /**
      * @return void
      */
     final protected function __clone()
     {
         throw new BadMethodCallException('You are not allowed to clone.');
+    }
+
+    final private static function validateInheritance(): void
+    {
+        $reflectionClass = new ReflectionClass(\get_called_class());
+        while ($reflectionClass = $reflectionClass->getParentClass()) {
+            if ($reflectionClass->getName() != self::class) {
+                throw new LogicException('You are not allowed to inherit from the concrete enum class.');
+            }
+        }
     }
 
     final private function __construct(string $name)
