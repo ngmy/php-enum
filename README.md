@@ -12,7 +12,7 @@ PHP Enum is the enumeration type for PHP.
 
 - Interface like the enum type of Java
 - Also provides the enum map and set like Java
-- Supports the static analysis like PHPStan. Please see [examples](/examples)
+- Supports the static analysis like PHPStan. Please see [examples](docs/examples)
 
 ```php
 /**
