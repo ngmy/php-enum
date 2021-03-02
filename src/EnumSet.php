@@ -33,7 +33,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Creates an enum set containing all of the elements in the specified element type.
      *
-     * @return EnumSet<Enum, Enum>
+     * @return EnumSet<Enum>
      *
      * @phpstan-template TEnum
      * @phpstan-param class-string<TEnum> $class
@@ -52,7 +52,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Creates an empty enum set with the specified element type.
      *
-     * @return EnumSet<Enum, Enum>
+     * @return EnumSet<Enum>
      *
      * @phpstan-template TEnum
      * @phpstan-param class-string<TEnum> $class
@@ -67,7 +67,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Creates an enum set initially containing the specified element.
      *
-     * @return EnumSet<Enum, Enum>
+     * @return EnumSet<Enum>
      *
      * @phpstan-template TEnum of Enum
      * @phpstan-param TEnum $enum
@@ -84,7 +84,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Creates an enum set initially containing all of the elements in the range defined by the two specified endpoints.
      *
-     * @return EnumSet<Enum, Enum>
+     * @return EnumSet<Enum>
      *
      * @phpstan-template TEnum of Enum
      * @phpstan-param TEnum $from
@@ -145,7 +145,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Gets the enum set of items as a plain array.
+     * Gets the enum set of values as a plain array.
      *
      * @return list<Enum>
      *
@@ -154,7 +154,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     public function toArray(): array
     {
         /**
-         * @var list<object>
+         * @var list<Enum>
          * @phpstan-var list<T>
          */
         $array = $this->enumMap->toArray();
@@ -174,7 +174,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetExists($enum): bool
     {
-        return $this->enumMap->offsetExists($enum);
+        return isset($this->enumMap[$enum]);
     }
 
     /**
@@ -187,19 +187,19 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetGet($enum)
     {
-        return $this->enumMap->offsetGet($enum);
+        return $this->enumMap[$enum];
     }
 
     /**
-     * @param null $name
-     * @param Enum $enum
+     * @param Enum|null $key
+     * @param Enum      $enum
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      *
      * @phpstan-param T $enum
      */
-    public function offsetSet($name, $enum): void
+    public function offsetSet($key, $enum): void
     {
-        $this->enumMap->offsetSet($enum, $enum);
+        $this->enumMap[$enum] = $enum;
     }
 
     /**
@@ -210,7 +210,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetUnset($enum): void
     {
-        $this->enumMap->offsetUnset($enum);
+        unset($this->enumMap[$enum]);
     }
 
     /**
@@ -218,7 +218,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public function count(): int
     {
-        return $this->enumMap->count();
+        return \count($this->enumMap);
     }
 
     /**

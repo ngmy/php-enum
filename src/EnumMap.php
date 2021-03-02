@@ -198,7 +198,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Gets the enum map of items as a plain array.
+     * Gets the enum map of values as a plain array.
      *
      * @return array<string, object>
      *
@@ -222,7 +222,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetExists($enum): bool
     {
-        return $this->typedArray->offsetExists($enum);
+        return isset($this->typedArray[$enum]);
     }
 
     /**
@@ -235,23 +235,21 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetGet($enum)
     {
-        return $this->typedArray->offsetGet($enum);
+        return $this->typedArray[$enum];
     }
 
     /**
      * @param Enum  $enum
-     * @param mixed $item
+     * @param mixed $value
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      *
      * @phpstan-param TKey   $enum
-     * @phpstan-param TValue $item
+     * @phpstan-param TValue $value
      */
-    public function offsetSet($enum, $item): void
+    public function offsetSet($enum, $value): void
     {
-        $this->typedArray->offsetSet($enum, $item);
-        $lastHashCode = \array_key_last($this->typedArray->toArray());
-        \assert(\is_int($lastHashCode));
-        $this->keys[$lastHashCode] = $enum;
+        $this->typedArray[$enum] = $value;
+        $this->keys[$enum->hashCode()] = $enum;
     }
 
     /**
@@ -262,7 +260,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetUnset($enum): void
     {
-        $this->typedArray->offsetUnset($enum);
+        unset($this->typedArray[$enum]);
+        unset($this->keys[$enum->hashCode()]);
     }
 
     /**
@@ -270,7 +269,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function count(): int
     {
-        return $this->typedArray->count();
+        return \count($this->typedArray);
     }
 
     /**
