@@ -237,7 +237,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     private static function validateEnum(string $class): void
     {
-        if (\get_parent_class($class) != Enum::class) {
+        if (!\class_exists($class) || \get_parent_class($class) != Enum::class) {
             throw new InvalidArgumentException(
                 \sprintf('The type of the value must be the concrete enum class, "%s" given.', $class)
             );
