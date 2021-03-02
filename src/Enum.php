@@ -151,7 +151,7 @@ abstract class Enum
         throw new BadMethodCallException('You are not allowed to clone.');
     }
 
-    final private static function validateInheritance(): void
+    private static function validateInheritance(): void
     {
         $reflectionClass = new ReflectionClass(\get_called_class());
         while ($reflectionClass = $reflectionClass->getParentClass()) {
