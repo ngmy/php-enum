@@ -6,9 +6,10 @@ namespace Ngmy\Enum\Tests;
 
 use Exception;
 use InvalidArgumentException;
-use Ngmy\TypedArray\TypedArray;
+use LogicException;
+use Ngmy\Enum\Enum;
 
-class EnumTraitTest extends TestCase
+class EnumTest extends TestCase
 {
     /**
      * @return array<int|string, array<int|string, mixed>>
@@ -20,11 +21,10 @@ class EnumTraitTest extends TestCase
             [Data\Enum1::class, 'BAR', Data\Enum1::class],
             [Data\Enum1::class, 'BAZ', Data\Enum1::class],
             [Data\Enum1::class, 'QUX', new InvalidArgumentException()],
-            [Data\Enum2::class, 'QUX', Data\Enum2::class],
-            [Data\Enum2::class, 'FOO', Data\Enum2::class],
-            [Data\Enum2::class, 'BAR', Data\Enum2::class],
-            [Data\Enum2::class, 'BAZ', Data\Enum2::class],
-            [Data\Enum2::class, 'QUUX', new InvalidArgumentException()],
+            [Data\Enum5::class, 'FOO', new LogicException()],
+            [Data\Enum5::class, 'BAR', new LogicException()],
+            [Data\Enum5::class, 'BAZ', new LogicException()],
+            [Data\Enum5::class, 'QUX', new LogicException()],
         ];
     }
 
@@ -40,8 +40,9 @@ class EnumTraitTest extends TestCase
         if ($expected instanceof Exception) {
             $this->expectException(\get_class($expected));
         }
+        $actual = $class::valueOf($name);
         \assert(\is_string($expected));
-        $this->assertInstanceOf($expected, $class::valueOf($name));
+        $this->assertInstanceOf($expected, $actual);
     }
 
     /**
@@ -56,8 +57,9 @@ class EnumTraitTest extends TestCase
         if ($expected instanceof Exception) {
             $this->expectException(\get_class($expected));
         }
+        $actual = $class::$name();
         \assert(\is_string($expected));
-        $this->assertInstanceOf($expected, $class::$name());
+        $this->assertInstanceOf($expected, $actual);
     }
 
     /**
@@ -68,32 +70,30 @@ class EnumTraitTest extends TestCase
         return [
             [
                 Data\Enum1::class,
-                TypedArray::ofClass(Data\Enum1::class, [
+                [
                     Data\Enum1::valueOf('FOO'),
                     Data\Enum1::valueOf('BAR'),
                     Data\Enum1::valueOf('BAZ'),
-                ]),
+                ],
             ],
             [
-                Data\Enum2::class,
-                TypedArray::ofClass(Data\Enum2::class, [
-                    Data\Enum2::valueOf('QUX'),
-                    Data\Enum2::valueOf('FOO'),
-                    Data\Enum2::valueOf('BAR'),
-                    Data\Enum2::valueOf('BAZ'),
-                ]),
+                Data\Enum5::class,
+                new LogicException(),
             ],
         ];
     }
 
     /**
+     * @param Exception|list<Enum> $expected
      * @dataProvider valuesProvider
      *
-     * @phpstan-param class-string       $class
-     * @phpstan-param TypedArray<object> $expected
+     * @phpstan-param class-string $class
      */
-    public function testValues(string $class, TypedArray $expected): void
+    public function testValues(string $class, $expected): void
     {
+        if ($expected instanceof Exception) {
+            $this->expectException(\get_class($expected));
+        }
         $this->assertEquals($expected, $class::values());
     }
 
@@ -112,25 +112,23 @@ class EnumTraitTest extends TestCase
                 ],
             ],
             [
-                Data\Enum2::class,
-                [
-                    'QUX',
-                    'FOO',
-                    'BAR',
-                    'BAZ',
-                ],
+                Data\Enum5::class,
+                new LogicException(),
             ],
         ];
     }
 
     /**
-     * @param list<string> $expected
+     * @param Exception|list<string> $expected
      * @dataProvider namesProvider
      *
      * @phpstan-param class-string $class
      */
-    public function testNames(string $class, array $expected): void
+    public function testNames(string $class, $expected): void
     {
+        if ($expected instanceof Exception) {
+            $this->expectException(\get_class($expected));
+        }
         $this->assertSame($expected, $class::names());
     }
 
@@ -143,20 +141,14 @@ class EnumTraitTest extends TestCase
             [Data\Enum1::valueOf('FOO'), 'FOO'],
             [Data\Enum1::valueOf('BAR'), 'BAR'],
             [Data\Enum1::valueOf('BAZ'), 'BAZ'],
-            [Data\Enum2::valueOf('QUX'), 'QUX'],
-            [Data\Enum2::valueOf('FOO'), 'FOO'],
-            [Data\Enum2::valueOf('BAR'), 'BAR'],
-            [Data\Enum2::valueOf('BAZ'), 'BAZ'],
         ];
     }
 
     /**
-     * @param object $enum
      * @dataProvider nameProvider
      */
-    public function testName($enum, string $expected): void
+    public function testName(Enum $enum, string $expected): void
     {
-        \assert(\method_exists($enum, 'name'));
         $this->assertSame($expected, $enum->name());
     }
 
@@ -169,21 +161,16 @@ class EnumTraitTest extends TestCase
             [Data\Enum1::valueOf('FOO'), 'FOO'],
             [Data\Enum1::valueOf('BAR'), 'BAR'],
             [Data\Enum1::valueOf('BAZ'), 'BAZ'],
-            [Data\Enum2::valueOf('QUX'), 'QUX'],
-            [Data\Enum2::valueOf('FOO'), 'FOO'],
-            [Data\Enum2::valueOf('BAR'), 'BAR'],
-            [Data\Enum2::valueOf('BAZ'), 'BAZ'],
-            [Data\Enum5::valueOf('FOO'), 'Foo'],
-            [Data\Enum5::valueOf('BAR'), 'Bar'],
-            [Data\Enum5::valueOf('BAZ'), 'Baz'],
+            [Data\Enum3::valueOf('FOO'), 'Foo'],
+            [Data\Enum3::valueOf('BAR'), 'Bar'],
+            [Data\Enum3::valueOf('BAZ'), 'Baz'],
         ];
     }
 
     /**
-     * @param object $enum
      * @dataProvider toStringProvider
      */
-    public function testToString($enum, string $expected): void
+    public function testToString(Enum $enum, string $expected): void
     {
         $this->assertSame($expected, (string) $enum);
     }
@@ -197,20 +184,14 @@ class EnumTraitTest extends TestCase
             [Data\Enum1::valueOf('FOO'), 0],
             [Data\Enum1::valueOf('BAR'), 1],
             [Data\Enum1::valueOf('BAZ'), 2],
-            [Data\Enum2::valueOf('QUX'), 0],
-            [Data\Enum2::valueOf('FOO'), 1],
-            [Data\Enum2::valueOf('BAR'), 2],
-            [Data\Enum2::valueOf('BAZ'), 3],
         ];
     }
 
     /**
-     * @param object $enum
      * @dataProvider ordinalProvider
      */
-    public function testOridianl($enum, int $expected): void
+    public function testOridianl(Enum $enum, int $expected): void
     {
-        \assert(\method_exists($enum, 'ordinal'));
         $this->assertSame($expected, $enum->ordinal());
     }
 
@@ -226,27 +207,39 @@ class EnumTraitTest extends TestCase
             [Data\Enum1::valueOf('FOO'), Data\Enum1::valueOf('BAR'), false],
             [Data\Enum1::valueOf('BAR'), Data\Enum1::valueOf('BAZ'), false],
             [Data\Enum1::valueOf('BAZ'), Data\Enum1::valueOf('FOO'), false],
-            [Data\Enum2::valueOf('QUX'), Data\Enum2::valueOf('QUX'), true],
-            [Data\Enum2::valueOf('FOO'), Data\Enum2::valueOf('FOO'), true],
-            [Data\Enum2::valueOf('BAR'), Data\Enum2::valueOf('BAR'), true],
-            [Data\Enum2::valueOf('BAZ'), Data\Enum2::valueOf('BAZ'), true],
-            [Data\Enum2::valueOf('QUX'), Data\Enum2::valueOf('BAZ'), false],
-            [Data\Enum2::valueOf('FOO'), Data\Enum2::valueOf('QUX'), false],
-            [Data\Enum2::valueOf('BAR'), Data\Enum2::valueOf('FOO'), false],
-            [Data\Enum2::valueOf('BAZ'), Data\Enum2::valueOf('BAR'), false],
-            [Data\Enum1::valueOf('FOO'), Data\Enum2::valueOf('FOO'), false],
         ];
     }
 
     /**
-     * @param object $one
-     * @param object $other
      * @dataProvider equalsProvider
      */
-    public function testEquals($one, $other, bool $expected): void
+    public function testEquals(Enum $one, Enum $other, bool $expected): void
     {
-        \assert(\method_exists($one, 'equals'));
         $this->assertSame($expected, $one->equals($other));
+        $this->assertSame($expected, $other->equals($one));
+    }
+
+    /**
+     * @return array<int|string, array<int|string, mixed>>
+     */
+    public function hashCodeProvider(): array
+    {
+        return [
+            [Data\Enum1::valueOf('FOO'), Data\Enum1::valueOf('FOO'), true],
+            [Data\Enum1::valueOf('BAR'), Data\Enum1::valueOf('BAR'), true],
+            [Data\Enum1::valueOf('BAZ'), Data\Enum1::valueOf('BAZ'), true],
+            [Data\Enum1::valueOf('FOO'), Data\Enum1::valueOf('BAR'), false],
+            [Data\Enum1::valueOf('BAR'), Data\Enum1::valueOf('BAZ'), false],
+            [Data\Enum1::valueOf('BAZ'), Data\Enum1::valueOf('FOO'), false],
+        ];
+    }
+
+    /**
+     * @dataProvider hashCodeProvider
+     */
+    public function testHashCode(Enum $one, Enum $other, bool $expected): void
+    {
+        $this->assertSame($expected, $one->hashCode() === $other->hashCode());
     }
 
     /**
@@ -255,24 +248,18 @@ class EnumTraitTest extends TestCase
     public function getValueProvider(): array
     {
         return [
-            [Data\Enum3::valueOf('FOO'), 1],
-            [Data\Enum3::valueOf('BAR'), 2],
-            [Data\Enum3::valueOf('BAZ'), 3],
-            [Data\Enum4::valueOf('QUX'), 4],
-            [Data\Enum4::valueOf('FOO'), 1],
-            [Data\Enum4::valueOf('BAR'), 2],
-            [Data\Enum4::valueOf('BAZ'), 3],
+            [Data\Enum2::valueOf('FOO'), 1],
+            [Data\Enum2::valueOf('BAR'), 2],
+            [Data\Enum2::valueOf('BAZ'), 3],
         ];
     }
 
     /**
-     * @param object $enum
-     * @param mixed  $expected
+     * @param mixed $expected
      * @dataProvider getValueProvider
      */
-    public function testGetValue($enum, $expected): void
+    public function testGetValue(Data\Enum2 $enum, $expected): void
     {
-        \assert(\method_exists($enum, 'getValue'));
         $this->assertSame($expected, $enum->getValue());
     }
 }

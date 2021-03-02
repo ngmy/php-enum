@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 namespace Ngmy\Enum\Tests\Data;
 
+use Ngmy\Enum\Enum;
+
 /**
- * @method static static QUX()
+ * @method static static FOO()
+ * @method static static BAR()
+ * @method static static BAZ()
  */
-class Enum4 extends Enum3
+class Enum4 extends Enum
 {
-    /** @var int */
-    protected static $QUX = 4;
+    /**
+     * @var null
+     * @enum
+     */
+    protected static $FOO;
+    /**
+     * @var null
+     * @enum
+     */
+    protected static $BAR;
+    /**
+     * @var null
+     * @enum
+     */
+    protected static $BAZ;
 }
