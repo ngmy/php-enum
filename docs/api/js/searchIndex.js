@@ -148,7 +148,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Ngmy\\Enum\\EnumMap\u003A\u003AtoArray\u0028\u0029",
             "name": "toArray",
-            "summary": "Gets\u0020the\u0020enum\u0020map\u0020of\u0020items\u0020as\u0020a\u0020plain\u0020array.",
+            "summary": "Gets\u0020the\u0020enum\u0020map\u0020of\u0020values\u0020as\u0020a\u0020plain\u0020array.",
             "url": "classes/Ngmy-Enum-EnumMap.html#method_toArray"
         },                {
             "fqsen": "\\Ngmy\\Enum\\EnumMap\u003A\u003AoffsetExists\u0028\u0029",
@@ -233,7 +233,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Ngmy\\Enum\\EnumSet\u003A\u003AtoArray\u0028\u0029",
             "name": "toArray",
-            "summary": "Gets\u0020the\u0020enum\u0020set\u0020of\u0020items\u0020as\u0020a\u0020plain\u0020array.",
+            "summary": "Gets\u0020the\u0020enum\u0020set\u0020of\u0020values\u0020as\u0020a\u0020plain\u0020array.",
             "url": "classes/Ngmy-Enum-EnumSet.html#method_toArray"
         },                {
             "fqsen": "\\Ngmy\\Enum\\EnumSet\u003A\u003AoffsetExists\u0028\u0029",

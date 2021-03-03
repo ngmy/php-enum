@@ -144,6 +144,46 @@ class EnumSetTest extends TestCase
     /**
      * @return array<int|string, array<int|string, mixed>>
      */
+    public function isEmptyProvider(): array
+    {
+        return [
+            [EnumSet::noneOf(Data\Enum1::class), true],
+            [EnumSet::allOf(Data\Enum1::class), false]
+        ];
+    }
+
+    /**
+     * @param EnumSet<Enum> $enumSet
+     * @dataProvider isEmptyProvider
+     */
+    public function testIsEmpty(EnumSet $enumSet, bool $expected): void
+    {
+        $this->assertSame($expected, $enumSet->isEmpty());
+    }
+
+    /**
+     * @return array<int|string, array<int|string, mixed>>
+     */
+    public function countProvider(): array
+    {
+        return [
+            [EnumSet::noneOf(Data\Enum1::class), 0],
+            [EnumSet::allOf(Data\Enum1::class), 3]
+        ];
+    }
+
+    /**
+     * @param EnumSet<Enum> $enumSet
+     * @dataProvider countProvider
+     */
+    public function testCount(EnumSet $enumSet, int $expected): void
+    {
+        $this->assertSame($expected, $enumSet->count());
+    }
+
+    /**
+     * @return array<int|string, array<int|string, mixed>>
+     */
     public function enumSetProvider(): array
     {
         return [
@@ -192,6 +232,8 @@ class EnumSetTest extends TestCase
     }
 
     /**
+     * TODO: Split this test into several smaller tests
+     *
      * @param EnumSet<Enum>                      $enumSet
      * @param array<int|string, mixed>           $enums
      * @param array<int|string, mixed>|Exception $expected
@@ -205,6 +247,16 @@ class EnumSetTest extends TestCase
         foreach ($enums as $enum) {
             $enumSet[] = $enum;
         }
+        \assert(\is_array($expected));
         $this->assertEquals($expected, $enumSet->toArray());
+        $i = 0;
+        foreach ($enumSet as $enum) {
+            $this->assertEquals($expected[$i], $enum);
+            $this->assertEquals($expected[$i], $enumSet[$enum]);
+            $this->assertTrue(isset($enumSet[$enum]));
+            unset($enumSet[$enum]);
+            $this->assertFalse(isset($enumSet[$enum]));
+            ++$i;
+        }
     }
 }

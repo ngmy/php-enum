@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Ngmy\Enum\Tests;
 
+use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
 use Ngmy\Enum\Enum;
+use ReflectionClass;
 
 class EnumTest extends TestCase
 {
@@ -115,12 +117,22 @@ class EnumTest extends TestCase
                 Data\Enum5::class,
                 new LogicException(),
             ],
+            [
+                Data\Enum6::class,
+                [
+                    'FOO',
+                    'BAR',
+                    'BAZ',
+                ],
+            ],
         ];
     }
 
     /**
      * @param Exception|list<string> $expected
      * @dataProvider namesProvider
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      *
      * @phpstan-param class-string $class
      */
@@ -129,7 +141,10 @@ class EnumTest extends TestCase
         if ($expected instanceof Exception) {
             $this->expectException(\get_class($expected));
         }
-        $this->assertSame($expected, $class::names());
+        $fromReflection = $class::names();
+        $fromCache = $class::names();
+        $this->assertSame($expected, $fromReflection);
+        $this->assertSame($expected, $fromCache);
     }
 
     /**
@@ -261,5 +276,30 @@ class EnumTest extends TestCase
     public function testGetValue(Data\Enum2 $enum, $expected): void
     {
         $this->assertSame($expected, $enum->getValue());
+    }
+
+    public function testSetter(): void
+    {
+        $foo = Data\Enum6::FOO();
+        $this->expectException(BadMethodCallException::class);
+        // @phpstan-ignore-next-line
+        $foo->property = 1;
+    }
+
+    public function testUnserialize(): void
+    {
+        $foo = Data\Enum1::FOO();
+        $serializedFoo = \serialize($foo);
+        $this->expectException(BadMethodCallException::class);
+        \unserialize($serializedFoo);
+    }
+
+    public function testClone(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+        $reflectionClass = new ReflectionClass(Data\Enum1::class);
+        $reflectionMethod = $reflectionClass->getMethod('__clone');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke(Data\Enum1::valueOf('FOO'));
     }
 }
