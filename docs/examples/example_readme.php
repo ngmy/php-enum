@@ -5,9 +5,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * @method static static FOO()
- * @method static static BAR()
- * @method static static BAZ()
+ * @method static self FOO()
+ * @method static self BAR()
+ * @method static self BAZ()
  */
 class Enum1 extends Ngmy\Enum\Enum
 {
@@ -51,9 +51,9 @@ echo var_export($foo->equals($bar), true) . PHP_EOL;                  // false
 // You can also have the enum constant with a value
 
 /**
- * @method static static FOO()
- * @method static static BAR()
- * @method static static BAZ()
+ * @method static self FOO()
+ * @method static self BAR()
+ * @method static self BAZ()
  */
 class Enum2 extends Ngmy\Enum\Enum
 {
