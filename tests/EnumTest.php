@@ -148,6 +148,16 @@ class EnumTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testNamesSameProcessAnotherClass(): void
+    {
+        $this->assertSame(['FOO', 'BAR', 'BAZ'], Data\Enum1::names());
+        $this->assertSame(['HOGE', 'FUGA'], Data\Enum8::names());
+    }
+
+    /**
      * @return array<int|string, array<int|string, mixed>>
      */
     public function nameProvider(): array
@@ -255,6 +265,34 @@ class EnumTest extends TestCase
     public function testHashCode(Enum $one, Enum $other, bool $expected): void
     {
         $this->assertSame($expected, $one->hashCode() === $other->hashCode());
+    }
+
+    /**
+     * @return array<int|string, array<int|string, mixed>>
+     */
+    public function getInstanceProvider(): array
+    {
+        return [
+            [Data\Enum7::class, 1, Data\Enum7::valueOf('FOO')],
+            [Data\Enum7::class, 2, Data\Enum7::valueOf('BAR')],
+            [Data\Enum7::class, 3, Data\Enum7::valueOf('BAZ')],
+            [Data\Enum7::class, 4, new InvalidArgumentException()]
+        ];
+    }
+
+    /**
+     * @param mixed          $value
+     * @param Enum|Exception $expected
+     * @dataProvider getInstanceProvider
+     *
+     * @phpstan-param class-string $class
+     */
+    public function testGetInstance(string $class, $value, $expected): void
+    {
+        if ($expected instanceof Exception) {
+            $this->expectException(\get_class($expected));
+        }
+        $this->assertEquals($expected, $class::getInstance($value));
     }
 
     /**

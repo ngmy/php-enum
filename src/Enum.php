@@ -11,8 +11,11 @@ use ReflectionClass;
 
 abstract class Enum
 {
-    /** @var list<string> */
-    private static $names;
+    /**
+     * @var array<string, list<string>>
+     * @phpstan-var array<class-string, list<string>>
+     */
+    private static $names = [];
 
     /** @var string */
     private $name;
@@ -41,7 +44,7 @@ abstract class Enum
     /**
      * Returns all constants of this enum type.
      *
-     * @return list<self>
+     * @return list<static>
      */
     final public static function values(): array
     {
@@ -59,11 +62,12 @@ abstract class Enum
     final public static function names(): array
     {
         self::validateInheritance();
-        if (isset(self::$names)) {
-            return self::$names;
+        $class = \get_called_class();
+        if (isset(self::$names[$class])) {
+            return self::$names[$class];
         }
-        self::$names = [];
-        $reflectionClass = new ReflectionClass(\get_called_class());
+        self::$names[$class] = [];
+        $reflectionClass = new ReflectionClass($class);
         $staticProperties = $reflectionClass->getStaticProperties();
         foreach (\array_keys($staticProperties) as $propertyName) {
             $reflectionProperty = $reflectionClass->getProperty($propertyName);
@@ -76,10 +80,10 @@ abstract class Enum
                 if (!\preg_match('/@[^\s]+/', $line, $mathces) || $mathces[0] != '@enum') {
                     continue;
                 }
-                self::$names[] = $propertyName;
+                self::$names[$class][] = $propertyName;
             }
         }
-        return self::$names;
+        return self::$names[$class];
     }
 
     /**
