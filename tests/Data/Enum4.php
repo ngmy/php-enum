@@ -7,9 +7,9 @@ namespace Ngmy\Enum\Tests\Data;
 use Ngmy\Enum\Enum;
 
 /**
- * @method static static FOO()
- * @method static static BAR()
- * @method static static BAZ()
+ * @method static self FOO()
+ * @method static self BAR()
+ * @method static self BAZ()
  */
 class Enum4 extends Enum
 {
