@@ -148,6 +148,16 @@ class EnumTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testNamesSameProcessAnotherClass(): void
+    {
+        $this->assertSame(['FOO', 'BAR', 'BAZ'], Data\Enum1::names());
+        $this->assertSame(['HOGE', 'FUGA'], Data\Enum8::names());
+    }
+
+    /**
      * @return array<int|string, array<int|string, mixed>>
      */
     public function nameProvider(): array
