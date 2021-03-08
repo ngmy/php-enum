@@ -41,7 +41,7 @@ abstract class Enum
     /**
      * Returns all constants of this enum type.
      *
-     * @return list<self>
+     * @return list<static>
      */
     final public static function values(): array
     {

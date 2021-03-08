@@ -260,6 +260,34 @@ class EnumTest extends TestCase
     /**
      * @return array<int|string, array<int|string, mixed>>
      */
+    public function getInstanceProvider(): array
+    {
+        return [
+            [Data\Enum7::class, 1, Data\Enum7::valueOf('FOO')],
+            [Data\Enum7::class, 2, Data\Enum7::valueOf('BAR')],
+            [Data\Enum7::class, 3, Data\Enum7::valueOf('BAZ')],
+            [Data\Enum7::class, 4, new InvalidArgumentException()]
+        ];
+    }
+
+    /**
+     * @param mixed          $value
+     * @param Enum|Exception $expected
+     * @dataProvider getInstanceProvider
+     *
+     * @phpstan-param class-string $class
+     */
+    public function testGetInstance(string $class, $value, $expected): void
+    {
+        if ($expected instanceof Exception) {
+            $this->expectException(\get_class($expected));
+        }
+        $this->assertEquals($expected, $class::getInstance($value));
+    }
+
+    /**
+     * @return array<int|string, array<int|string, mixed>>
+     */
     public function getValueProvider(): array
     {
         return [
