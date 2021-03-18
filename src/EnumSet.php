@@ -167,10 +167,8 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $enum
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @phpstan-param T $enum
      */
     public function offsetExists($enum): bool
     {
@@ -178,11 +176,10 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $enum
      * @return Enum|null
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      *
-     * @phpstan-param T $enum
      * @phpstan-return T|null
      */
     public function offsetGet($enum)
@@ -203,10 +200,8 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $enum
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @phpstan-param T $enum
      */
     public function offsetUnset($enum): void
     {
