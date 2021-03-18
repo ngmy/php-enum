@@ -208,60 +208,55 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $array = $this->typedArray->toArray();
         return \array_reduce(\array_keys($array), function (array $carry, int $hashCode) use ($array): array {
-            $enum = $this->keys[$hashCode];
-            $carry[$enum->name()] = $array[$hashCode];
+            $key = $this->keys[$hashCode];
+            $carry[$key->name()] = $array[$hashCode];
             return $carry;
         }, []);
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @phpstan-param TKey $enum
      */
-    public function offsetExists($enum): bool
+    public function offsetExists($key): bool
     {
-        return isset($this->typedArray[$enum]);
+        return isset($this->typedArray[$key]);
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $key
      * @return mixed|null
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      *
-     * @phpstan-param TKey $enum
      * @phpstan-return TValue|null
      */
-    public function offsetGet($enum)
+    public function offsetGet($key)
     {
-        return $this->typedArray[$enum];
+        return $this->typedArray[$key];
     }
 
     /**
-     * @param Enum  $enum
+     * @param Enum  $key
      * @param mixed $value
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      *
-     * @phpstan-param TKey   $enum
+     * @phpstan-param TKey   $key
      * @phpstan-param TValue $value
      */
-    public function offsetSet($enum, $value): void
+    public function offsetSet($key, $value): void
     {
-        $this->typedArray[$enum] = $value;
-        $this->keys[$enum->hashCode()] = $enum;
+        $this->typedArray[$key] = $value;
+        $this->keys[$key->hashCode()] = $key;
     }
 
     /**
-     * @param Enum $enum
+     * @param mixed $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @phpstan-param TKey $enum
      */
-    public function offsetUnset($enum): void
+    public function offsetUnset($key): void
     {
-        unset($this->typedArray[$enum]);
-        unset($this->keys[$enum->hashCode()]);
+        unset($this->typedArray[$key]);
+        unset($this->keys[$key->hashCode()]);
     }
 
     /**
