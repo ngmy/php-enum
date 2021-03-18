@@ -167,24 +167,24 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $enum
+     * @param mixed $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
      */
-    public function offsetExists($enum): bool
+    public function offsetExists($key): bool
     {
-        return isset($this->enumMap[$enum]);
+        return isset($this->enumMap[$key]);
     }
 
     /**
-     * @param mixed $enum
+     * @param mixed $key
      * @return Enum|null
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      *
      * @phpstan-return T|null
      */
-    public function offsetGet($enum)
+    public function offsetGet($key)
     {
-        return $this->enumMap[$enum];
+        return $this->enumMap[$key];
     }
 
     /**
@@ -200,12 +200,12 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $enum
+     * @param mixed $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      */
-    public function offsetUnset($enum): void
+    public function offsetUnset($key): void
     {
-        unset($this->enumMap[$enum]);
+        unset($this->enumMap[$key]);
     }
 
     /**
