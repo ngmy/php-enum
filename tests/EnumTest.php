@@ -86,10 +86,11 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|list<Enum> $expected
+     * @param Exception|array<int, Enum> $expected
      * @dataProvider valuesProvider
      *
-     * @phpstan-param class-string $class
+     * @phpstan-param class-string         $class
+     * @phpstan-param Exception|list<Enum> $expected
      */
     public function testValues(string $class, $expected): void
     {
@@ -129,12 +130,13 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|list<string> $expected
+     * @param Exception|array<int, string> $expected
      * @dataProvider namesProvider
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
-     * @phpstan-param class-string $class
+     * @phpstan-param class-string           $class
+     * @phpstan-param Exception|list<string> $expected
      */
     public function testNames(string $class, $expected): void
     {

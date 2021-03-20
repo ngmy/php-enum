@@ -70,8 +70,10 @@ class EnumMapTest extends TestCase
     }
 
     /**
-     * @param list<Data\Enum1> $enums
+     * @param array<int, Data\Enum1> $enums
      * @dataProvider isEmptyProvider
+     *
+     * @phpstan-param list<Data\Enum1> $enums
      */
     public function testIsEmpty(array $enums, bool $expected): void
     {
@@ -94,8 +96,10 @@ class EnumMapTest extends TestCase
     }
 
     /**
-     * @param list<Data\Enum1> $enums
+     * @param array<int, Data\Enum1> $enums
      * @dataProvider countProvider
+     *
+     * @phpstan-param list<Data\Enum1> $enums
      */
     public function testCount(array $enums, int $expected): void
     {
@@ -231,10 +235,13 @@ class EnumMapTest extends TestCase
      * TODO: Split this test into several smaller tests
      *
      * @param EnumMap<Enum, mixed>           $enumMap
-     * @param list<Enum>                     $keys
-     * @param list<mixed>                    $values
+     * @param array<int, Enum>               $keys
+     * @param array<int, mixed>              $values
      * @param array<string, mixed>|Exception $expected
      * @dataProvider dataProvider
+     *
+     * @phpstan-param list<Enum>  $keys
+     * @phpstan-param list<mixed> $values
      */
     public function test(EnumMap $enumMap, array $keys, array $values, $expected): void
     {

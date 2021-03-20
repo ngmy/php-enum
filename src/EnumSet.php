@@ -147,14 +147,14 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Gets the enum set of values as a plain array.
      *
-     * @return list<Enum>
+     * @return array<int, Enum>
      *
      * @phpstan-return list<T>
      */
     public function toArray(): array
     {
         /**
-         * @var list<Enum>
+         * @var array<int, Enum>
          * @phpstan-var list<T>
          */
         $array = $this->enumMap->toArray();
