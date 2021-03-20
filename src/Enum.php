@@ -12,7 +12,7 @@ use ReflectionClass;
 abstract class Enum
 {
     /**
-     * @var array<string, list<string>>
+     * @var array<string, array<int, string>>
      * @phpstan-var array<class-string, list<string>>
      */
     private static $names = [];
@@ -23,8 +23,10 @@ abstract class Enum
     /**
      * Returns the enum constant of the specified name.
      *
-     * @param list<mixed> $arguments
+     * @param array<int, mixed> $arguments
      * @return static
+     *
+     * @phpstan-param list<mixed> $arguments
      */
     final public static function __callStatic(string $name, array $arguments): self
     {
@@ -44,7 +46,9 @@ abstract class Enum
     /**
      * Returns all constants of this enum type.
      *
-     * @return list<static>
+     * @return array<int, static>
+     *
+     * @phpstan-return list<static>
      */
     final public static function values(): array
     {
@@ -56,8 +60,10 @@ abstract class Enum
     /**
      * Returns names of all constants of this enum type.
      *
-     * @return list<string>
+     * @return array<int, string>
      * @internal
+     *
+     * @phpstan-return list<string>
      */
     final public static function names(): array
     {
