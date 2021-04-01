@@ -183,6 +183,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, object>
      *
      * @phpstan-param class-string $trait
+     * @phpstan-return EnumMap<TKey, object>
      */
     public function withTraitValue(string $trait): self
     {
