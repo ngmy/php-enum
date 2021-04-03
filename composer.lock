@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "242e07387a353272851cb3d7246270c5",
+    "content-hash": "7be8f676ffc0ca7f978ad4ee569d52ca",
     "packages": [
         {
             "name": "ngmy/typed-array",
-            "version": "0.9.0",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ngmy/php-typed-array.git",
-                "reference": "c55688a86db5f83141623d25a32f9a80dbfab5b8"
+                "reference": "107a930460de2cf59cc9dbfca721b94bd8a2e48a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ngmy/php-typed-array/zipball/c55688a86db5f83141623d25a32f9a80dbfab5b8",
-                "reference": "c55688a86db5f83141623d25a32f9a80dbfab5b8",
+                "url": "https://api.github.com/repos/ngmy/php-typed-array/zipball/107a930460de2cf59cc9dbfca721b94bd8a2e48a",
+                "reference": "107a930460de2cf59cc9dbfca721b94bd8a2e48a",
                 "shasum": ""
             },
             "require": {
@@ -48,6 +48,10 @@
                 "array",
                 "type"
             ],
+            "support": {
+                "issues": "https://github.com/ngmy/php-typed-array/issues",
+                "source": "https://github.com/ngmy/php-typed-array/tree/0.10.0"
+            },
             "funding": [
                 {
                     "url": "https://flattr.com/@ngmy",
@@ -58,7 +62,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-30T11:23:06+00:00"
+            "time": "2021-04-03T08:51:46+00:00"
         }
     ],
     "packages-dev": [],
@@ -71,5 +75,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
