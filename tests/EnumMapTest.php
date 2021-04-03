@@ -8,6 +8,13 @@ use Exception;
 use InvalidArgumentException;
 use Ngmy\Enum\Enum;
 use Ngmy\Enum\EnumMap;
+use stdClass;
+
+use function assert;
+use function get_class;
+use function is_array;
+use function is_null;
+use function tmpfile;
 
 class EnumMapTest extends TestCase
 {
@@ -18,7 +25,7 @@ class EnumMapTest extends TestCase
     {
         return [
             [Data\Enum1::class],
-            [\stdClass::class, new InvalidArgumentException()],
+            [stdClass::class, new InvalidArgumentException()],
             ['a', new InvalidArgumentException()],
         ];
     }
@@ -30,11 +37,11 @@ class EnumMapTest extends TestCase
      */
     public function testNew(string $class, Exception $exception = null): void
     {
-        if (\is_null($exception)) {
+        if (is_null($exception)) {
             $this->expectNotToPerformAssertions();
         }
         if ($exception instanceof Exception) {
-            $this->expectException(\get_class($exception));
+            $this->expectException(get_class($exception));
         }
         // NOTE: To test that an exception is thrown
         // @phpstan-ignore-next-line
@@ -117,9 +124,9 @@ class EnumMapTest extends TestCase
      */
     public function dataProvider(): array
     {
-        $resource1 = \tmpfile();
-        $resource2 = \tmpfile();
-        $resource3 = \tmpfile();
+        $resource1 = tmpfile();
+        $resource2 = tmpfile();
+        $resource3 = tmpfile();
 
         return [
             [
@@ -248,12 +255,12 @@ class EnumMapTest extends TestCase
     public function test(EnumMap $enumMap, array $keys, array $values, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         foreach ($keys as $i => $key) {
             $enumMap[$key] = $values[$i];
         }
-        \assert(\is_array($expected));
+        assert(is_array($expected));
         $this->assertEquals($expected, $enumMap->toArray());
         $i = 0;
         foreach ($enumMap as $name => $value) {

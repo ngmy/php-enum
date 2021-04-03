@@ -12,6 +12,13 @@ use IteratorAggregate;
 use Ngmy\TypedArray\TypedArray;
 use Traversable;
 
+use function array_keys;
+use function array_reduce;
+use function class_exists;
+use function count;
+use function get_parent_class;
+use function sprintf;
+
 /**
  * @implements ArrayAccess<Enum, mixed>
  * @implements IteratorAggregate<string, mixed>
@@ -248,7 +255,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     public function toArray(): array
     {
         $array = $this->typedArray->toArray();
-        return \array_reduce(\array_keys($array), function (array $carry, int $hashCode) use ($array): array {
+        return array_reduce(array_keys($array), function (array $carry, int $hashCode) use ($array): array {
             $key = $this->keys[$hashCode];
             $carry[$key->name()] = $array[$hashCode];
             /** @psalm-var array<string, TValue> $carry */
@@ -326,7 +333,7 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     public function count(): int
     {
         /** @psalm-var 0|positive-int */
-        return \count($this->typedArray);
+        return count($this->typedArray);
     }
 
     /**
@@ -349,9 +356,9 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      */
     private static function validateEnum(string $class): void
     {
-        if (!\class_exists($class) || \get_parent_class($class) != Enum::class) {
+        if (!class_exists($class) || get_parent_class($class) != Enum::class) {
             throw new InvalidArgumentException(
-                \sprintf('The type of the key must be the concrete enum class, "%s" given.', $class)
+                sprintf('The type of the key must be the concrete enum class, "%s" given.', $class)
             );
         };
     }

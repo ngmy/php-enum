@@ -9,6 +9,21 @@ use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
 
+use function array_keys;
+use function array_map;
+use function array_search;
+use function assert;
+use function explode;
+use function get_called_class;
+use function in_array;
+use function is_int;
+use function ord;
+use function preg_match;
+use function sprintf;
+use function strlen;
+
+use const PHP_EOL;
+
 abstract class Enum
 {
     /**
@@ -57,7 +72,7 @@ abstract class Enum
      */
     final public static function values(): array
     {
-        return \array_map(function (string $name): self {
+        return array_map(function (string $name): self {
             return self::valueOf($name);
         }, self::names());
     }
@@ -75,22 +90,22 @@ abstract class Enum
     final public static function names(): array
     {
         self::validateInheritance();
-        $class = \get_called_class();
+        $class = get_called_class();
         if (isset(self::$names[$class])) {
             return self::$names[$class];
         }
         self::$names[$class] = [];
         $reflectionClass = new ReflectionClass($class);
         $staticProperties = $reflectionClass->getStaticProperties();
-        foreach (\array_keys($staticProperties) as $propertyName) {
+        foreach (array_keys($staticProperties) as $propertyName) {
             $reflectionProperty = $reflectionClass->getProperty($propertyName);
             $docComment = $reflectionProperty->getDocComment();
             if ($docComment === false) {
                 continue;
             }
-            $lines = \explode(\PHP_EOL, $docComment);
+            $lines = explode(PHP_EOL, $docComment);
             foreach ($lines as $line) {
-                if (!\preg_match('/@[^\s]+/', $line, $mathces) || $mathces[0] != '@enum') {
+                if (!preg_match('/@[^\s]+/', $line, $mathces) || $mathces[0] != '@enum') {
                     continue;
                 }
                 self::$names[$class][] = $propertyName;
@@ -122,8 +137,8 @@ abstract class Enum
      */
     final public function ordinal(): int
     {
-        $ordinal = \array_search($this->name, self::names());
-        \assert(\is_int($ordinal));
+        $ordinal = array_search($this->name, self::names());
+        assert(is_int($ordinal));
         return $ordinal;
     }
 
@@ -141,9 +156,9 @@ abstract class Enum
     final public function hashCode(): int
     {
         $result = 17;
-        $nameLength = \strlen($this->name);
+        $nameLength = strlen($this->name);
         for ($i = 0; $i < $nameLength; ++$i) {
-            $result = 31 * $result + \ord($this->name[$i]);
+            $result = 31 * $result + ord($this->name[$i]);
         }
         return $result;
     }
@@ -171,7 +186,7 @@ abstract class Enum
 
     private static function validateInheritance(): void
     {
-        $reflectionClass = new ReflectionClass(\get_called_class());
+        $reflectionClass = new ReflectionClass(get_called_class());
         while ($reflectionClass = $reflectionClass->getParentClass()) {
             if ($reflectionClass->getName() != self::class) {
                 throw new LogicException('You are not allowed to inherit from the concrete enum class.');
@@ -181,8 +196,8 @@ abstract class Enum
 
     final private function __construct(string $name)
     {
-        if (!\in_array($name, self::names())) {
-            throw new InvalidArgumentException(\sprintf('The name "%s" is not defined.', $name));
+        if (!in_array($name, self::names())) {
+            throw new InvalidArgumentException(sprintf('The name "%s" is not defined.', $name));
         }
         $this->name = $name;
     }

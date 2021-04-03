@@ -10,6 +10,10 @@ use Ngmy\Enum\Enum;
 use Ngmy\Enum\EnumSet;
 use stdClass;
 
+use function assert;
+use function get_class;
+use function is_array;
+
 class EnumSetTest extends TestCase
 {
     /**
@@ -37,7 +41,7 @@ class EnumSetTest extends TestCase
     public function testAllOf(string $class, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         // NOTE: To test that an exception is thrown
         // @phpstan-ignore-next-line
@@ -66,7 +70,7 @@ class EnumSetTest extends TestCase
     public function testNoneOf(string $class, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         // NOTE: To test that an exception is thrown
         // @phpstan-ignore-next-line
@@ -93,7 +97,7 @@ class EnumSetTest extends TestCase
     public function testOf(Enum $class, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $actual = EnumSet::of($class);
         $this->assertEquals($expected, $actual->toArray());
@@ -139,7 +143,7 @@ class EnumSetTest extends TestCase
     public function testRange(Enum $from, Enum $to, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $actual = EnumSet::range($from, $to);
         $this->assertEquals($expected, $actual->toArray());
@@ -246,12 +250,12 @@ class EnumSetTest extends TestCase
     public function testEnumSet(EnumSet $enumSet, array $enums, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         foreach ($enums as $enum) {
             $enumSet[] = $enum;
         }
-        \assert(\is_array($expected));
+        assert(is_array($expected));
         $this->assertEquals($expected, $enumSet->toArray());
         $i = 0;
         foreach ($enumSet as $enum) {

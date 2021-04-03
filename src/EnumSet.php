@@ -11,6 +11,15 @@ use InvalidArgumentException;
 use IteratorAggregate;
 use Traversable;
 
+use function assert;
+use function class_exists;
+use function count;
+use function get_class;
+use function get_parent_class;
+use function method_exists;
+use function sprintf;
+use function usort;
+
 /**
  * @implements ArrayAccess<Enum, Enum>
  * @implements IteratorAggregate<int, Enum>
@@ -92,7 +101,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function of(Enum $enum): self
     {
-        $class = \get_class($enum);
+        $class = get_class($enum);
         $enumSet = new self(EnumMap::new($class)->withClassValue($class));
         $enumSet[] = $enum;
         return $enumSet;
@@ -115,11 +124,11 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function range(Enum $from, Enum $to): self
     {
-        $classFrom = \get_class($from);
-        $classTo = \get_class($to);
+        $classFrom = get_class($from);
+        $classTo = get_class($to);
         if ($classFrom != $classTo) {
             throw new InvalidArgumentException(
-                \sprintf(
+                sprintf(
                     'The range enum classes must be the same class, "%s" and "%s" given.',
                     $classFrom,
                     $classTo
@@ -130,7 +139,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
         $ordinalTo = $to->ordinal();
         if ($ordinalFrom > $ordinalTo) {
             throw new InvalidArgumentException(
-                \sprintf(
+                sprintf(
                     'The range "%s" (position %s) to "%s" (position %s) is invalid.',
                     $classFrom,
                     $ordinalFrom,
@@ -141,7 +150,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
         }
         $enums = [];
         $names = $classFrom::names();
-        $nameCount = \count($names);
+        $nameCount = count($names);
         for ($i = 0; $i < $nameCount; ++$i) {
             if ($i < $ordinalFrom) {
                 continue;
@@ -188,9 +197,9 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
          * @psalm-var list<T>
          */
         $array = $this->enumMap->toArray();
-        \usort($array, function (object $enum1, object $enum2): int {
-            \assert(\method_exists($enum1, 'ordinal'));
-            \assert(\method_exists($enum2, 'ordinal'));
+        usort($array, function (object $enum1, object $enum2): int {
+            assert(method_exists($enum1, 'ordinal'));
+            assert(method_exists($enum2, 'ordinal'));
             return $enum1->ordinal() < $enum2->ordinal() ? -1 : 1;
         });
         return $array;
@@ -264,7 +273,7 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     public function count(): int
     {
         /** @psalm-var 0|positive-int */
-        return \count($this->enumMap);
+        return count($this->enumMap);
     }
 
     /**
@@ -287,9 +296,9 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      */
     private static function validateEnum(string $class): void
     {
-        if (!\class_exists($class) || \get_parent_class($class) != Enum::class) {
+        if (!class_exists($class) || get_parent_class($class) != Enum::class) {
             throw new InvalidArgumentException(
-                \sprintf('The type of the value must be the concrete enum class, "%s" given.', $class)
+                sprintf('The type of the value must be the concrete enum class, "%s" given.', $class)
             );
         };
     }
