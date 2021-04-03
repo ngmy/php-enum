@@ -86,7 +86,7 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|array<int, Enum> $expected
+     * @param array<int, Enum>|Exception $expected
      * @dataProvider valuesProvider
      *
      * @phpstan-param class-string         $class
@@ -130,7 +130,7 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|array<int, string> $expected
+     * @param array<int, string>|Exception $expected
      * @dataProvider namesProvider
      * @runInSeparateProcess
      * @preserveGlobalState disabled

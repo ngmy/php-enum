@@ -18,15 +18,20 @@ use Traversable;
  * @see https://www.php.net/manual/en/class.countable.php
  * @see https://www.php.net/manual/en/class.iteratoraggregate.php
  *
- * @phpstan-template T
+ * @phpstan-template T of Enum
  * @phpstan-implements ArrayAccess<T, T>
  * @phpstan-implements IteratorAggregate<int, T>
+ *
+ * @psalm-template T of Enum
+ * @template-implements ArrayAccess<T, T>
+ * @template-implements IteratorAggregate<int, T>
  */
 class EnumSet implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @var EnumMap<Enum, Enum>
      * @phpstan-var EnumMap<T, T>
+     * @psalm-var EnumMap<T, T>
      */
     private $enumMap;
 
@@ -35,9 +40,13 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return EnumSet<Enum>
      *
-     * @phpstan-template TEnum
+     * @phpstan-template TEnum of Enum
      * @phpstan-param class-string<TEnum> $class
      * @phpstan-return EnumSet<TEnum>
+     *
+     * @psalm-template TEnum of Enum
+     * @psalm-param class-string<TEnum> $class
+     * @psalm-return EnumSet<TEnum>
      */
     public static function allOf(string $class): self
     {
@@ -54,9 +63,13 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return EnumSet<Enum>
      *
-     * @phpstan-template TEnum
+     * @phpstan-template TEnum of Enum
      * @phpstan-param class-string<TEnum> $class
      * @phpstan-return EnumSet<TEnum>
+     *
+     * @psalm-template TEnum of Enum
+     * @psalm-param class-string<TEnum> $class
+     * @psalm-return EnumSet<TEnum>
      */
     public static function noneOf(string $class): self
     {
@@ -72,6 +85,10 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @phpstan-template TEnum of Enum
      * @phpstan-param TEnum $enum
      * @phpstan-return EnumSet<TEnum>
+     *
+     * @psalm-template TEnum of Enum
+     * @psalm-param TEnum $enum
+     * @psalm-return EnumSet<TEnum>
      */
     public static function of(Enum $enum): self
     {
@@ -90,6 +107,11 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @phpstan-param TEnum $from
      * @phpstan-param TEnum $to
      * @phpstan-return EnumSet<TEnum>
+     *
+     * @psalm-template TEnum of Enum
+     * @psalm-param TEnum $from
+     * @psalm-param TEnum $to
+     * @psalm-return EnumSet<TEnum>
      */
     public static function range(Enum $from, Enum $to): self
     {
@@ -127,7 +149,12 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
             if ($i > $ordinalTo) {
                 break;
             }
-            $enums[] = $classFrom::{$names[$i]}();
+            /**
+             * @phpstan-var TEnum $enum
+             * @psalm-var TEnum $enum
+             */
+            $enum = $classFrom::{$names[$i]}();
+            $enums[] = $enum;
         }
         $enumSet = new self(EnumMap::new($classFrom)->withClassValue($classFrom));
         foreach ($enums as $enum) {
@@ -150,12 +177,15 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @return array<int, Enum>
      *
      * @phpstan-return list<T>
+     *
+     * @psalm-return list<T>
      */
     public function toArray(): array
     {
         /**
          * @var array<int, Enum>
          * @phpstan-var list<T>
+         * @psalm-var list<T>
          */
         $array = $this->enumMap->toArray();
         \usort($array, function (object $enum1, object $enum2): int {
@@ -167,8 +197,12 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @phpstan-param T $key
+     *
+     * @psalm-param T $key
      */
     public function offsetExists($key): bool
     {
@@ -176,11 +210,15 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @return Enum|null
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      *
+     * @phpstan-param T $key
      * @phpstan-return T|null
+     *
+     * @psalm-param T $key
+     * @psalm-return T|null
      */
     public function offsetGet($key)
     {
@@ -192,7 +230,11 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @param Enum      $enum
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      *
-     * @phpstan-param T $enum
+     * @phpstan-param T|null $key
+     * @phpstan-param T      $enum
+     *
+     * @psalm-param T|null $key
+     * @psalm-param T      $enum
      */
     public function offsetSet($key, $enum): void
     {
@@ -200,8 +242,12 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @phpstan-param T $key
+     *
+     * @psalm-param T $key
      */
     public function offsetUnset($key): void
     {
@@ -210,9 +256,14 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @see https://www.php.net/manual/en/countable.count.php
+     *
+     * @phpstan-return 0|positive-int
+     *
+     * @psalm-return 0|positive-int
      */
     public function count(): int
     {
+        /** @psalm-var 0|positive-int */
         return \count($this->enumMap);
     }
 
@@ -221,6 +272,8 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @see https://www.php.net/manual/en/iteratoraggregate.getiterator.php
      *
      * @phpstan-return Traversable<int, T>
+     *
+     * @psalm-return Traversable<int, T>
      */
     public function getIterator(): Traversable
     {
@@ -229,6 +282,8 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @phpstan-param class-string $class
+     *
+     * @psalm-param class-string $class
      */
     private static function validateEnum(string $class): void
     {
@@ -243,6 +298,8 @@ class EnumSet implements ArrayAccess, Countable, IteratorAggregate
      * @param EnumMap<Enum, Enum> $enumMap
      *
      * @phpstan-param EnumMap<T, T> $enumMap
+     *
+     * @psalm-param EnumMap<T, T> $enumMap
      */
     private function __construct(EnumMap $enumMap)
     {

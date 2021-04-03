@@ -39,6 +39,8 @@ class EnumSetTest extends TestCase
         if ($expected instanceof Exception) {
             $this->expectException(\get_class($expected));
         }
+        // NOTE: To test that an exception is thrown
+        // @phpstan-ignore-next-line
         $actual = EnumSet::allOf($class);
         $this->assertEquals($expected, $actual->toArray());
     }
@@ -66,6 +68,8 @@ class EnumSetTest extends TestCase
         if ($expected instanceof Exception) {
             $this->expectException(\get_class($expected));
         }
+        // NOTE: To test that an exception is thrown
+        // @phpstan-ignore-next-line
         $actual = EnumSet::noneOf($class);
         $this->assertEquals($expected, $actual->toArray());
     }

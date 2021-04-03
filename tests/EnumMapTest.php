@@ -36,6 +36,8 @@ class EnumMapTest extends TestCase
         if ($exception instanceof Exception) {
             $this->expectException(\get_class($exception));
         }
+        // NOTE: To test that an exception is thrown
+        // @phpstan-ignore-next-line
         EnumMap::new($class);
     }
 

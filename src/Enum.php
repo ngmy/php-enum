@@ -14,6 +14,7 @@ abstract class Enum
     /**
      * @var array<string, array<int, string>>
      * @phpstan-var array<class-string, list<string>>
+     * @psalm-var array<class-string, list<string>>
      */
     private static $names = [];
 
@@ -27,6 +28,8 @@ abstract class Enum
      * @return static
      *
      * @phpstan-param list<mixed> $arguments
+     *
+     * @psalm-param list<mixed> $arguments
      */
     final public static function __callStatic(string $name, array $arguments): self
     {
@@ -49,6 +52,8 @@ abstract class Enum
      * @return array<int, static>
      *
      * @phpstan-return list<static>
+     *
+     * @psalm-return list<static>
      */
     final public static function values(): array
     {
@@ -64,6 +69,8 @@ abstract class Enum
      * @internal
      *
      * @phpstan-return list<string>
+     *
+     * @psalm-return list<string>
      */
     final public static function names(): array
     {
@@ -115,8 +122,9 @@ abstract class Enum
      */
     final public function ordinal(): int
     {
-        \assert(\is_int(\array_search($this->name, self::names())));
-        return \array_search($this->name, self::names());
+        $ordinal = \array_search($this->name, self::names());
+        \assert(\is_int($ordinal));
+        return $ordinal;
     }
 
     /**
