@@ -11,6 +11,12 @@ use LogicException;
 use Ngmy\Enum\Enum;
 use ReflectionClass;
 
+use function assert;
+use function get_class;
+use function is_string;
+use function serialize;
+use function unserialize;
+
 class EnumTest extends TestCase
 {
     /**
@@ -40,10 +46,10 @@ class EnumTest extends TestCase
     public function testValueOf(string $class, string $name, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $actual = $class::valueOf($name);
-        \assert(\is_string($expected));
+        assert(is_string($expected));
         $this->assertInstanceOf($expected, $actual);
     }
 
@@ -57,10 +63,10 @@ class EnumTest extends TestCase
     public function testMagicFactoryMethod(string $class, string $name, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $actual = $class::$name();
-        \assert(\is_string($expected));
+        assert(is_string($expected));
         $this->assertInstanceOf($expected, $actual);
     }
 
@@ -86,7 +92,7 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|array<int, Enum> $expected
+     * @param array<int, Enum>|Exception $expected
      * @dataProvider valuesProvider
      *
      * @phpstan-param class-string         $class
@@ -95,7 +101,7 @@ class EnumTest extends TestCase
     public function testValues(string $class, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $this->assertEquals($expected, $class::values());
     }
@@ -130,7 +136,7 @@ class EnumTest extends TestCase
     }
 
     /**
-     * @param Exception|array<int, string> $expected
+     * @param array<int, string>|Exception $expected
      * @dataProvider namesProvider
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -141,7 +147,7 @@ class EnumTest extends TestCase
     public function testNames(string $class, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $fromReflection = $class::names();
         $fromCache = $class::names();
@@ -292,7 +298,7 @@ class EnumTest extends TestCase
     public function testGetInstance(string $class, $value, $expected): void
     {
         if ($expected instanceof Exception) {
-            $this->expectException(\get_class($expected));
+            $this->expectException(get_class($expected));
         }
         $this->assertEquals($expected, $class::getInstance($value));
     }
@@ -329,9 +335,9 @@ class EnumTest extends TestCase
     public function testUnserialize(): void
     {
         $foo = Data\Enum1::FOO();
-        $serializedFoo = \serialize($foo);
+        $serializedFoo = serialize($foo);
         $this->expectException(BadMethodCallException::class);
-        \unserialize($serializedFoo);
+        unserialize($serializedFoo);
     }
 
     public function testClone(): void

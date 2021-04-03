@@ -6,6 +6,9 @@ namespace Ngmy\Enum\Tests\Data;
 
 use Ngmy\Enum\Enum;
 
+use function strtolower;
+use function ucwords;
+
 /**
  * @method static self FOO()
  * @method static self BAR()
@@ -34,6 +37,6 @@ class Enum3 extends Enum
      */
     public function __toString(): string
     {
-        return \ucwords(\strtolower($this->name()));
+        return ucwords(strtolower($this->name()));
     }
 }

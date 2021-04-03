@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "ngmy/typed-array": "^0.8.0"
+        "ngmy/typed-array": "^0.11.0"
     },
     "autoload": {
         "psr-4": {
@@ -39,20 +39,40 @@
     "prefer-stable": true,
     "scripts": {
         "test": [
-            "@php tools/phpunit --colors=always"
+            "@phpunit"
         ],
         "lint": [
-            "@php tools/phpcs"
-        ],
-        "findbugs": [
-            "@php tools/phpstan analyse --ansi"
+            "@phpcs",
+            "@phpstan",
+            "@psalm"
         ],
         "fmt": [
-            "@php tools/phpcbf | exit 0",
-            "@php tools/php-cs-fixer fix --ansi"
+            "@php-cs-fixer",
+            "@phpcbf"
         ],
-        "docs": [
-            "@php tools/phpDocumentor --force"
+        "doc": [
+            "@phpdoc"
+        ],
+        "php-cs-fixer": [
+            "tools/php-cs-fixer fix --ansi"
+        ],
+        "phpcbf": [
+            "tools/phpcbf"
+        ],
+        "phpcs": [
+            "tools/phpcs"
+        ],
+        "phpdoc": [
+            "tools/phpDocumentor --force"
+        ],
+        "phpstan": [
+            "tools/phpstan analyse --ansi"
+        ],
+        "phpunit": [
+            "tools/phpunit --colors=always"
+        ],
+        "psalm": [
+            "if [ \"${PSALM_SHEPHERD:-0}\" = '0' ]; then tools/psalm --no-cache; else tools/psalm --no-cache --shepherd; fi"
         ]
     }
 }

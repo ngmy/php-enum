@@ -12,6 +12,13 @@ use IteratorAggregate;
 use Ngmy\TypedArray\TypedArray;
 use Traversable;
 
+use function array_keys;
+use function array_reduce;
+use function class_exists;
+use function count;
+use function get_parent_class;
+use function sprintf;
+
 /**
  * @implements ArrayAccess<Enum, mixed>
  * @implements IteratorAggregate<string, mixed>
@@ -19,21 +26,28 @@ use Traversable;
  * @see https://www.php.net/manual/en/class.countable.php
  * @see https://www.php.net/manual/en/class.iteratoraggregate.php
  *
- * @phpstan-template TKey
+ * @phpstan-template TKey of Enum
  * @phpstan-template TValue
  * @phpstan-implements ArrayAccess<TKey, TValue>
  * @phpstan-implements IteratorAggregate<string, TValue>
+ *
+ * @psalm-template TKey of Enum
+ * @psalm-template TValue
+ * @template-implements ArrayAccess<TKey, TValue>
+ * @template-implements IteratorAggregate<string, TValue>
  */
 class EnumMap implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @var TypedArray<Enum, mixed>
      * @phpstan-var TypedArray<TKey, TValue>
+     * @psalm-var TypedArray<TKey, TValue>
      */
     private $typedArray;
     /**
      * @var array<int, Enum>
      * @phpstan-var array<int, TKey>
+     * @psalm-var array<int, TKey>
      */
     private $keys = [];
 
@@ -42,9 +56,13 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return EnumMap<Enum, mixed>
      *
-     * @phpstan-template TEnum
+     * @phpstan-template TEnum of Enum
      * @phpstan-param class-string<TEnum> $class
-     * @return EnumMap<TEnum, mixed>
+     * @phpstan-return EnumMap<TEnum, mixed>
+     *
+     * @psalm-template TEnum of Enum
+     * @psalm-param class-string<TEnum> $class
+     * @psalm-return EnumMap<TEnum, mixed>
      */
     public static function new(string $class): self
     {
@@ -59,6 +77,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, array<int|string, mixed>>
      *
      * @phpstan-return EnumMap<TKey, array<int|string, mixed>>
+     *
+     * @psalm-return EnumMap<TKey, array<int|string, mixed>>
      */
     public function withArrayValue(): self
     {
@@ -71,6 +91,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, bool>
      *
      * @phpstan-return EnumMap<TKey, bool>
+     *
+     * @psalm-return EnumMap<TKey, bool>
      */
     public function withBoolValue(): self
     {
@@ -83,6 +105,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, float>
      *
      * @phpstan-return EnumMap<TKey, float>
+     *
+     * @psalm-return EnumMap<TKey, float>
      */
     public function withFloatValue(): self
     {
@@ -95,6 +119,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, int>
      *
      * @phpstan-return EnumMap<TKey, int>
+     *
+     * @psalm-return EnumMap<TKey, int>
      */
     public function withIntValue(): self
     {
@@ -107,6 +133,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, mixed>
      *
      * @phpstan-return EnumMap<TKey, mixed>
+     *
+     * @psalm-return EnumMap<TKey, mixed>
      */
     public function withMixedValue(): self
     {
@@ -119,6 +147,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, object>
      *
      * @phpstan-return EnumMap<TKey, object>
+     *
+     * @psalm-return EnumMap<TKey, object>
      */
     public function withObjectValue(): self
     {
@@ -131,6 +161,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, resource>
      *
      * @phpstan-return EnumMap<TKey, resource>
+     *
+     * @psalm-return EnumMap<TKey, resource>
      */
     public function withResourceValue(): self
     {
@@ -143,6 +175,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, string>
      *
      * @phpstan-return EnumMap<TKey, string>
+     *
+     * @psalm-return EnumMap<TKey, string>
      */
     public function withStringValue(): self
     {
@@ -157,6 +191,10 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @phpstan-template TClass
      * @phpstan-param class-string<TClass> $class
      * @phpstan-return EnumMap<TKey, TClass>
+     *
+     * @psalm-template TClass
+     * @psalm-param class-string<TClass> $class
+     * @psalm-return EnumMap<TKey, TClass>
      */
     public function withClassValue(string $class): self
     {
@@ -171,6 +209,10 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @phpstan-template TInterface
      * @phpstan-param class-string<TInterface> $interface
      * @phpstan-return EnumMap<TKey, TInterface>
+     *
+     * @psalm-template TInterface
+     * @psalm-param class-string<TInterface> $interface
+     * @psalm-return EnumMap<TKey, TInterface>
      */
     public function withInterfaceValue(string $interface): self
     {
@@ -183,6 +225,10 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return EnumMap<Enum, object>
      *
      * @phpstan-param class-string $trait
+     * @phpstan-return EnumMap<TKey, object>
+     *
+     * @psalm-param trait-string $trait
+     * @psalm-return EnumMap<TKey, object>
      */
     public function withTraitValue(string $trait): self
     {
@@ -203,20 +249,27 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @return array<string, object>
      *
      * @phpstan-return array<string, TValue>
+     *
+     * @psalm-return array<string, TValue>
      */
     public function toArray(): array
     {
         $array = $this->typedArray->toArray();
-        return \array_reduce(\array_keys($array), function (array $carry, int $hashCode) use ($array): array {
+        return array_reduce(array_keys($array), function (array $carry, int $hashCode) use ($array): array {
             $key = $this->keys[$hashCode];
             $carry[$key->name()] = $array[$hashCode];
+            /** @psalm-var array<string, TValue> $carry */
             return $carry;
         }, []);
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @phpstan-param TKey $key
+     *
+     * @psalm-param TKey $key
      */
     public function offsetExists($key): bool
     {
@@ -224,11 +277,15 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @return mixed|null
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      *
+     * @phpstan-param TKey $key
      * @phpstan-return TValue|null
+     *
+     * @psalm-param TKey $key
+     * @psalm-return TValue|null
      */
     public function offsetGet($key)
     {
@@ -242,6 +299,9 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      *
      * @phpstan-param TKey   $key
      * @phpstan-param TValue $value
+     *
+     * @psalm-param TKey   $key
+     * @psalm-param TValue $value
      */
     public function offsetSet($key, $value): void
     {
@@ -250,8 +310,12 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $key
+     * @param Enum $key
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @phpstan-param TKey $key
+     *
+     * @psalm-param TKey $key
      */
     public function offsetUnset($key): void
     {
@@ -261,10 +325,15 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @see https://www.php.net/manual/en/countable.count.php
+     *
+     * @phpstan-return 0|positive-int
+     *
+     * @psalm-return 0|positive-int
      */
     public function count(): int
     {
-        return \count($this->typedArray);
+        /** @psalm-var 0|positive-int */
+        return count($this->typedArray);
     }
 
     /**
@@ -272,6 +341,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @see https://www.php.net/manual/en/iteratoraggregate.getiterator.php
      *
      * @phpstan-return Traversable<string, TValue>
+     *
+     * @psalm-return Traversable<string, TValue>
      */
     public function getIterator(): Traversable
     {
@@ -280,12 +351,14 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @phpstan-param class-string $class
+     *
+     * @psalm-param class-string $class
      */
     private static function validateEnum(string $class): void
     {
-        if (!\class_exists($class) || \get_parent_class($class) != Enum::class) {
+        if (!class_exists($class) || get_parent_class($class) != Enum::class) {
             throw new InvalidArgumentException(
-                \sprintf('The type of the key must be the concrete enum class, "%s" given.', $class)
+                sprintf('The type of the key must be the concrete enum class, "%s" given.', $class)
             );
         };
     }
@@ -294,6 +367,8 @@ class EnumMap implements ArrayAccess, Countable, IteratorAggregate
      * @param TypedArray<Enum, mixed> $typedArray
      *
      * @phpstan-param TypedArray<TKey, TValue> $typedArray
+     *
+     * @psalm-param TypedArray<TKey, TValue> $typedArray
      */
     private function __construct(TypedArray $typedArray)
     {

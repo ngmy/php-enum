@@ -7,12 +7,14 @@
 [![PHP CI](https://github.com/ngmy/php-typed-array/actions/workflows/php.yml/badge.svg)](https://github.com/ngmy/php-typed-array/actions/workflows/php.yml)
 [![Coverage Status](https://coveralls.io/repos/github/ngmy/php-enum/badge.svg?branch=master)](https://coveralls.io/github/ngmy/php-enum?branch=master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
+[![Psalm Coverage](https://shepherd.dev/github/ngmy/php-typed-array/coverage.svg?)](https://shepherd.dev/github/ngmy/php-typed-array)
+[![Psalm Level](https://shepherd.dev/github/ngmy/php-typed-array/level.svg?)](https://shepherd.dev/github/ngmy/php-typed-array)
 
 PHP Enum is the enumeration type for PHP.
 
 - Interface like the enum type of Java
 - Also provides the enum map and set like Java
-- Supports the static analysis like PHPStan. Please see [examples](docs/examples)
+- Supports the static analysis like PHPStan and Psalm. Please see [examples](docs/examples)
 
 ```php
 /**
